@@ -5,10 +5,9 @@ using Data.Store;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 using Ultilities.Core;
 using Ultilities.Factory;
 
@@ -24,8 +23,7 @@ namespace CoreAPI
 
             services.AddTransient<IRoleRepository, RoleRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
-            services.AddIdentity<AppUser, AppRole>()
-                .AddDefaultTokenProviders();
+            services.AddIdentity<AppUser, AppRole>();
 
             services.Configure<IdentityOptions>(opt =>
             {
@@ -39,10 +37,32 @@ namespace CoreAPI
 
             services.AddSingleton<IDbConnectionFactory>((c) =>
             {
-                var connectionString = configuration.GetConnectionString("DbConnectionString");
-
+                var connectionString = configuration.GetConnectionString("AuthConnectionString");
                 return new SqlServerConnectionFactory(connectionString);
             });
+        }
+
+        public static void AuthenConfig(IServiceCollection services, IConfiguration Configuration)
+        {
+            var authenConfig = Configuration.GetSection("AuthenSettingConfigs");
+            services.AddAuthentication(opt=>opt.DefaultAuthenticateScheme = "Authorize Schema")
+                    .AddJwtBearer("Authorize Schema", x =>
+                    {
+                        x.SaveToken = true;                      
+                        x.RequireHttpsMetadata = false;
+                        x.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authenConfig["Secret"])),
+                            ValidateIssuer = true,
+                            ValidIssuer = authenConfig["Iss"],
+                            ValidateAudience = true,
+                            ValidAudience = authenConfig["Aud"],
+                            ValidateLifetime = true,
+                            RequireExpirationTime = true,
+                            ClockSkew = TimeSpan.Zero
+                        };
+                    });
         }
     }
 }

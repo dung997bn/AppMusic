@@ -29,20 +29,34 @@ namespace Data.Repositories.Implementations
             {
                 connection.Open();
                 var normalizedName = roleName.ToUpper();
-                var sqlFindRoleId = $"SELECT [Id] FROM [AspNetRoles] WHERE [NormalizedName] = {nameof(normalizedName)}";
-                var roleId = await connection.ExecuteScalarAsync<Guid?>(sqlFindRoleId);
-                if (!roleId.HasValue)
-                {
-                    var sqlInsertRole = $"INSERT INTO [AspNetRoles]([Id],[Name], [NormalizedName]) VALUES(@{nameof(roleId)},@{nameof(roleName)}, @{nameof(normalizedName)})";
-                    roleId = Guid.NewGuid();
-                    await connection.ExecuteAsync(sqlInsertRole, new { roleName, normalizedName });
-                }
+                var sqlFindRoleId = $"SELECT [Id] FROM [AspNetRoles] WHERE [NormalizedName] = '{normalizedName}'";
 
-                var sqlAssignToRole = $@"IF NOT EXISTS(SELECT 1 FROM [AspNetUserRoles] 
+                var roleId = await connection.ExecuteScalarAsync<Guid?>(sqlFindRoleId);
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        if (!roleId.HasValue)
+                        {
+                            roleId = Guid.NewGuid();
+                            var sqlInsertRole = $"INSERT INTO [AspNetRoles]([Id],[Name], [NormalizedName]) VALUES(@{nameof(roleId)}, @{nameof(roleName)}, @{nameof(normalizedName)})";
+                            await connection.ExecuteAsync(sqlInsertRole, new {roleId, roleName, normalizedName }, transaction);
+                        }
+
+                        var sqlAssignToRole = $@"IF NOT EXISTS(SELECT 1 FROM [AspNetUserRoles] 
                                             WHERE [UserId] = @userId AND [RoleId] = @{nameof(roleId)}) 
                                        INSERT INTO [AspNetUserRoles]([UserId], [RoleId]) VALUES(@userId, @{nameof(roleId)})";
 
-                await connection.ExecuteAsync(sqlAssignToRole, new { userId = user.Id, roleId });
+                        await connection.ExecuteAsync(sqlAssignToRole, new { userId = user.Id, roleId }, transaction);
+
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                    }
+                }
+
             }
         }
 

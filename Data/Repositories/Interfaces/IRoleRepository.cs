@@ -12,7 +12,6 @@ namespace Data.Repositories.Interfaces
     {
         Task<IEnumerable<AppRole>> GetAsync();
         Task<AppRole> GetByIdAsync(string id);
-        // Task<PagedResult<AppRole>> GetPagingAsync(string keyword, int pageIndex, int pageSize);
         Task<IdentityResult> CreateAsync(AppRole role);
         Task<IdentityResult> UpdateAsync(Guid id, AppRole role);
         Task<IdentityResult> DeleteAsync(string id);

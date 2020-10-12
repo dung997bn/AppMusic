@@ -54,11 +54,15 @@ namespace Data.Store
                 user.Id = Guid.NewGuid();
                 var sqlInsert = $@"INSERT INTO [AspNetUsers] ([Id],[UserName], [NormalizedUserName], [Email],
                     [NormalizedEmail], [EmailConfirmed], [PasswordHash], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled],
-                    [LockoutEnabled], [AccessFailedCount],[FullName],[Address])
+                    [LockoutEnabled], [AccessFailedCount],[FullName],[Address],[DoB],[CreatedDate],[UpdatedDate],[About])
                     VALUES (@{nameof(AppUser.Id)},@{nameof(AppUser.UserName)}, @{nameof(AppUser.NormalizedUserName)}, @{nameof(AppUser.Email)},
                     @{nameof(AppUser.NormalizedEmail)}, @{nameof(AppUser.EmailConfirmed)}, @{nameof(AppUser.PasswordHash)},
                     @{nameof(AppUser.PhoneNumber)}, @{nameof(AppUser.PhoneNumberConfirmed)}, @{nameof(AppUser.TwoFactorEnabled)},
-                    @{nameof(AppUser.LockoutEnabled)}, @{nameof(AppUser.AccessFailedCount)},@{nameof(AppUser.FullName)},@{nameof(AppUser.Adress)})";
+                    @{nameof(AppUser.LockoutEnabled)}, @{nameof(AppUser.AccessFailedCount)},@{nameof(AppUser.FullName)},@{nameof(AppUser.Adress)},
+                    @{nameof(AppUser.DoB)},@{nameof(AppUser.CreatedDate)},@{nameof(AppUser.UpdatedDate)},@{nameof(AppUser.About)})";
+
+                user.CreatedDate = DateTime.Now;
+                user.UpdatedDate = DateTime.Now;
                 await connection.ExecuteAsync(sqlInsert, user);
             }
 
@@ -309,7 +313,11 @@ namespace Data.Store
                     [PasswordHash] = @{nameof(AppUser.PasswordHash)},
                     [PhoneNumber] = @{nameof(AppUser.PhoneNumber)},
                     [PhoneNumberConfirmed] = @{nameof(AppUser.PhoneNumberConfirmed)},
-                    [TwoFactorEnabled] = @{nameof(AppUser.TwoFactorEnabled)}
+                    [TwoFactorEnabled] = @{nameof(AppUser.TwoFactorEnabled)},
+                    [DoB] = @{nameof(AppUser.DoB)},
+                    [CreatedDate] = @{nameof(AppUser.CreatedDate)},
+                    [UpdatedDate] = @{nameof(AppUser.UpdatedDate)},
+                    [About]= @{nameof(AppUser.About)}
                     WHERE [Id] = @{nameof(AppUser.Id)}";
                 await connection.ExecuteAsync(sqlUpdate, user);
             }
@@ -319,7 +327,7 @@ namespace Data.Store
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            // Nothing to dispose.
         }
     }
 }

@@ -123,7 +123,7 @@ namespace Data.Store
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            // Nothing to dispose.
         }
     }
 }
