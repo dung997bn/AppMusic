@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreAPI", "CoreAPI\CoreAPI.csproj", "{6507CDCD-CA7B-42B5-9999-FEBC472FA3F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServerAPI", "Identity\IdentityServerAPI.csproj", "{6507CDCD-CA7B-42B5-9999-FEBC472FA3F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{C0849BDA-9E71-4BEC-80A7-A1DE7588B319}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Domain\Data.csproj", "{C0849BDA-9E71-4BEC-80A7-A1DE7588B319}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ultilities", "Ultilities\Ultilities.csproj", "{F7A2E4FE-B7FF-4A60-A09A-EB886E77CAFF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ultilities", "Common\Ultilities.csproj", "{F7A2E4FE-B7FF-4A60-A09A-EB886E77CAFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
