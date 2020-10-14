@@ -1,16 +1,16 @@
-using Data.Repositories.CloudServer.Implementations;
-using Data.Repositories.CloudServer.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Ocelot.DependencyInjection;
+using Ocelot.Middleware;
 using System;
 using System.Text;
 using Ultilities.Constants;
 
-namespace BusinessProducerAPI
+namespace GatewayAPI
 {
     public class Startup
     {
@@ -25,12 +25,6 @@ namespace BusinessProducerAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-
-            services.AddTransient<IAudioRepository, AudioRepository>();
-            services.AddTransient<IVideoRepository, VideoRepository>();
-            services.AddTransient<IPhotoRepository, PhotoRepository>();
-
-            services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
 
             //Inject AuthenSettingConfigs
             services.Configure<AuthSettingConfigs>(Configuration.GetSection("AuthenSettingConfigs"));
@@ -55,17 +49,11 @@ namespace BusinessProducerAPI
                         };
                     });
 
-
-            //Swagger
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Busniess Producer API", Version = "v1" });
-            });
-
+            services.AddOcelot();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -82,13 +70,7 @@ namespace BusinessProducerAPI
             {
                 endpoints.MapControllers();
             });
-
-
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Busniess Producer V1");
-            });
+            await app.UseOcelot();
         }
     }
 }

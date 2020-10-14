@@ -7,9 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BusinessProducerAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/app-music/v1/[controller]")]
     [ApiController]
     public class PhotoController : ControllerBase
     {
+        [HttpGet]
+        public IActionResult Get()
+        {
+            return Ok("ok");
+        }
     }
 }

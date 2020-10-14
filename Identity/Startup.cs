@@ -67,7 +67,7 @@ namespace CoreAPI
                 });
             });
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
             app.UseAuthentication();
@@ -79,7 +79,7 @@ namespace CoreAPI
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Basket API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Identity API V1");
             });
         }
     }

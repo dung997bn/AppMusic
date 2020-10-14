@@ -18,7 +18,7 @@ using Ultilities.Constants;
 
 namespace CoreAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/app-music/v1/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = "Authorize Schema")]
     public class AuthController : ControllerBase
