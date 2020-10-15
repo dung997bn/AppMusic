@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Data.Models.Business
 {
-    public class Song
+    public class Audio
     {
         public Guid Id { get; set; }
         public string UserId { get; set; }

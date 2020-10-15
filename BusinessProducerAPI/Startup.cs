@@ -1,11 +1,16 @@
+using AutoMapper;
 using Data.Repositories.CloudServer.Implementations;
 using Data.Repositories.CloudServer.Interfaces;
+using EventBus;
+using EventBus.Core;
+using EventBus.Producers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using RabbitMQ.Client;
 using System;
 using System.Text;
 using Ultilities.Constants;
@@ -26,11 +31,14 @@ namespace BusinessProducerAPI
         {
             services.AddControllers();
 
+            //Repository
             services.AddTransient<IAudioRepository, AudioRepository>();
             services.AddTransient<IVideoRepository, VideoRepository>();
             services.AddTransient<IPhotoRepository, PhotoRepository>();
 
+            //Inject Configuration
             services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
+            services.Configure<EventBusConstants>(Configuration.GetSection("EventBusConstants"));
 
             //Inject AuthenSettingConfigs
             services.Configure<AuthSettingConfigs>(Configuration.GetSection("AuthenSettingConfigs"));
@@ -55,6 +63,29 @@ namespace BusinessProducerAPI
                         };
                     });
 
+            //AutoMapper
+            services.AddAutoMapper(typeof(Startup));
+
+            //RabbitMQ
+            services.AddSingleton<IEventBusConnection>(sp =>
+            {
+                var factory = new ConnectionFactory()
+                {
+                    HostName = Configuration["EventBus:HostName"]
+                };
+
+                if (!string.IsNullOrEmpty(Configuration["EventBus:UserName"]))
+                {
+                    factory.UserName = Configuration["EventBus:UserName"];
+                }
+                if (!string.IsNullOrEmpty(Configuration["EventBus:Password"]))
+                {
+                    factory.Password = Configuration["EventBus:Password"];
+                }
+                return new EventBusConnection(factory);
+            });
+
+            services.AddSingleton<BusinessProducer>();
 
             //Swagger
             services.AddSwaggerGen(c =>
