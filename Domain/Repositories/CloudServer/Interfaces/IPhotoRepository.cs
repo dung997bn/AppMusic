@@ -1,11 +1,12 @@
 ﻿using Data.ViewModels.CloudServer;
 using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace Data.Repositories.CloudServer.Interfaces
 {
     public interface IPhotoRepository
     {
-        FileUploadResult AddPhoto(IFormFile file);
-        string DeletePhoto(string publicId);
+        Task<FileUploadResult> AddPhoto(IFormFile file);
+        Task<string> DeletePhoto(string publicId);
     }
 }

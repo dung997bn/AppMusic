@@ -5,6 +5,7 @@ using Data.ViewModels.CloudServer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using System;
+using System.Threading.Tasks;
 using Ultilities.Constants;
 
 namespace Data.Repositories.CloudServer.Implementations
@@ -17,7 +18,7 @@ namespace Data.Repositories.CloudServer.Implementations
             var account = new Account(setting.Value.CloudName, setting.Value.ApiKey, setting.Value.ApiSecret);
             _cloudinary = new Cloudinary(account);
         }
-        public FileUploadResult AddPhoto(IFormFile file)
+        public async Task<FileUploadResult> AddPhoto(IFormFile file)
         {
             var uploadResult = new ImageUploadResult();
             if (file.Length > 0)
@@ -29,7 +30,7 @@ namespace Data.Repositories.CloudServer.Implementations
                         File = new FileDescription(file.FileName, stream),
                         Transformation = new Transformation().Height(500).Width(500).Crop("fill").Gravity("face")
                     };
-                    uploadResult = _cloudinary.Upload(uploadParams);
+                    uploadResult = await _cloudinary.UploadAsync(uploadParams);
                 }
             }
 
@@ -49,10 +50,11 @@ namespace Data.Repositories.CloudServer.Implementations
             };
         }
 
-        public string DeletePhoto(string publicId)
+        public async Task<string> DeletePhoto(string publicId)
         {
             var deletePrams = new DeletionParams(publicId);
-            var result = _cloudinary.Destroy(deletePrams);
+            deletePrams.ResourceType = ResourceType.Image;
+            var result = await _cloudinary.DestroyAsync(deletePrams);
             return result.Result == "ok" ? result.Result : null;
         }
     }

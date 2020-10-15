@@ -21,7 +21,7 @@ namespace Data.Repositories.CloudServer.Implementations
             var account = new Account(setting.Value.CloudName, setting.Value.ApiKey, setting.Value.ApiSecret);
             _cloudinary = new Cloudinary(account);
         }
-        public FileUploadResult AddVideo(IFormFile file)
+        public async Task<FileUploadResult> AddVideo(IFormFile file)
         {
             var uploadResult = new VideoUploadResult();
             if (file.Length > 0)
@@ -33,7 +33,7 @@ namespace Data.Repositories.CloudServer.Implementations
                         File = new FileDescription(file.FileName, stream),
                         Transformation = new Transformation().Quality("auto"),
                     };
-                    uploadResult = _cloudinary.UploadLarge(uploadParams);
+                    uploadResult = await _cloudinary.UploadLargeAsync(uploadParams);
                 }
             }
 
@@ -53,10 +53,11 @@ namespace Data.Repositories.CloudServer.Implementations
             };
         }
 
-        public string DeleteVideo(string publicId)
+        public async Task<string> DeleteVideo(string publicId)
         {
             var deletePrams = new DeletionParams(publicId);
-            var result = _cloudinary.Destroy(deletePrams);
+            deletePrams.ResourceType = ResourceType.Video;
+            var result = await _cloudinary.DestroyAsync(deletePrams);
             return result.Result == "ok" ? result.Result : null;
         }
     }

@@ -10,7 +10,7 @@ namespace Data.Repositories.CloudServer.Interfaces
 {
     public interface IAudioRepository
     {
-        FileUploadResult AddAudio(IFormFile file);
-        string DeleteAudio(string publicId);
+       Task< FileUploadResult> AddAudio(IFormFile file);
+        Task<string> DeleteAudio(string publicId);
     }
 }

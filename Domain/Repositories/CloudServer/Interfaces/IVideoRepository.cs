@@ -1,11 +1,12 @@
 ﻿using Data.ViewModels.CloudServer;
 using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace Data.Repositories.CloudServer.Interfaces
 {
     public interface IVideoRepository
     {
-        FileUploadResult AddVideo(IFormFile file);
-        string DeleteVideo(string publicId);
+        Task<FileUploadResult> AddVideo(IFormFile file);
+        Task<string> DeleteVideo(string publicId);
     }
 }

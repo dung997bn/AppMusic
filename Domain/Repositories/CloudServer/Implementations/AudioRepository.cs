@@ -4,6 +4,7 @@ using Data.Repositories.CloudServer.Interfaces;
 using Data.ViewModels.CloudServer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 using Ultilities.Constants;
 
 namespace Data.Repositories.CloudServer.Implementations
@@ -16,7 +17,7 @@ namespace Data.Repositories.CloudServer.Implementations
             var account = new Account(setting.Value.CloudName, setting.Value.ApiKey, setting.Value.ApiSecret);
             _cloudinary = new Cloudinary(account);
         }
-        public FileUploadResult AddAudio(IFormFile file)
+        public async Task<FileUploadResult> AddAudio(IFormFile file)
         {
             var uploadResult = new RawUploadResult();
             if (file.Length > 0)
@@ -27,7 +28,7 @@ namespace Data.Repositories.CloudServer.Implementations
                     {
                         File = new FileDescription(file.FileName, stream)
                     };
-                    uploadResult = _cloudinary.Upload(uploadParams);
+                    uploadResult = await _cloudinary.UploadAsync(uploadParams);
                 }
             }
 
@@ -47,10 +48,11 @@ namespace Data.Repositories.CloudServer.Implementations
             };
         }
 
-        public string DeleteAudio(string publicId)
+        public async Task<string> DeleteAudio(string publicId)
         {
             var deletePrams = new DeletionParams(publicId);
-            var result = _cloudinary.Destroy(deletePrams);
+            deletePrams.ResourceType = ResourceType.Video;
+            var result = await _cloudinary.DestroyAsync(deletePrams);
             return result.Result == "ok" ? result.Result : null;
         }
     }
