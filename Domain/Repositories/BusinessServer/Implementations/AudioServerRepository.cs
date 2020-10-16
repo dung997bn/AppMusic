@@ -18,7 +18,7 @@ namespace Data.Repositories.BusinessServer.Implementations
             _dbContext = dbContext;
         }
 
-        public Task<Audio> CreateAudio(Audio audio)
+        public async Task<Audio> CreateAudio(Audio audio)
         {
             throw new NotImplementedException();
         }

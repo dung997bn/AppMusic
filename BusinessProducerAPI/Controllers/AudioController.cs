@@ -67,7 +67,8 @@ namespace BusinessProducerAPI.Controllers
                 var eventMessage = _mapper.Map<AudioEvent>(audio);
                 eventMessage.RequestId = Guid.NewGuid();
 
-                await _producer.PublishAudioEvent(_constants.AudioExchange, _constants.AudioRouting, eventMessage);
+                await _producer.PublishAudioEvent(exchange: _constants.AudioExchange,
+                    routing: $"{_constants.AudioRouting}.create", audio: eventMessage);
                 return Accepted();
             }
             catch (Exception ex)

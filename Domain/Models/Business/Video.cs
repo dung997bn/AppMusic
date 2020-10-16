@@ -12,7 +12,7 @@ namespace Data.Models.Business
         public string UserId { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
-        public string Singer { get; set; }
+        public string Author { get; set; }
         public string UrlMp4 { get; set; }
         public string UrlImage { get; set; }
         public bool IsActive { get; set; }
