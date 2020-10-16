@@ -5,35 +5,32 @@ using Data.ViewModels.CloudServer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Ultilities.Constants;
 
 namespace Data.Repositories.CloudServer.Implementations
 {
-    public class VideoRepository : IVideoRepository
+    public class PhotoCloudRepository : IPhotoCloudRepository
     {
         private readonly Cloudinary _cloudinary;
-        public VideoRepository(IOptions<CloudinarySettings> setting)
+        public PhotoCloudRepository(IOptions<CloudinarySettings> setting)
         {
             var account = new Account(setting.Value.CloudName, setting.Value.ApiKey, setting.Value.ApiSecret);
             _cloudinary = new Cloudinary(account);
         }
-        public async Task<FileUploadResult> AddVideo(IFormFile file)
+        public async Task<FileUploadResult> AddPhoto(IFormFile file)
         {
-            var uploadResult = new VideoUploadResult();
+            var uploadResult = new ImageUploadResult();
             if (file.Length > 0)
             {
                 using (var stream = file.OpenReadStream())
                 {
-                    var uploadParams = new VideoUploadParams
+                    var uploadParams = new ImageUploadParams
                     {
                         File = new FileDescription(file.FileName, stream),
-                        Transformation = new Transformation().Quality("auto"),
+                        Transformation = new Transformation().Height(500).Width(500).Crop("fill").Gravity("face")
                     };
-                    uploadResult = await _cloudinary.UploadLargeAsync(uploadParams);
+                    uploadResult = await _cloudinary.UploadAsync(uploadParams);
                 }
             }
 
@@ -53,10 +50,10 @@ namespace Data.Repositories.CloudServer.Implementations
             };
         }
 
-        public async Task<string> DeleteVideo(string publicId)
+        public async Task<string> DeletePhoto(string publicId)
         {
             var deletePrams = new DeletionParams(publicId);
-            deletePrams.ResourceType = ResourceType.Video;
+            deletePrams.ResourceType = ResourceType.Image;
             var result = await _cloudinary.DestroyAsync(deletePrams);
             return result.Result == "ok" ? result.Result : null;
         }

@@ -27,27 +27,7 @@ namespace GatewayAPI
             services.AddControllers();
 
             //Inject AuthenSettingConfigs
-            services.Configure<AuthSettingConfigs>(Configuration.GetSection("AuthenSettingConfigs"));
-
-            var authenConfig = Configuration.GetSection("AuthenSettingConfigs");
-            services.AddAuthentication(opt => opt.DefaultAuthenticateScheme = "Authorize Schema")
-                    .AddJwtBearer("Authorize Schema", x =>
-                    {
-                        x.SaveToken = true;
-                        x.RequireHttpsMetadata = false;
-                        x.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuerSigningKey = true,
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authenConfig["Secret"])),
-                            ValidateIssuer = true,
-                            ValidIssuer = authenConfig["Iss"],
-                            ValidateAudience = true,
-                            ValidAudience = authenConfig["Aud"],
-                            ValidateLifetime = true,
-                            RequireExpirationTime = true,
-                            ClockSkew = TimeSpan.Zero
-                        };
-                    });
+            Ultilities.DI.Injector.InjectAuth(services, Configuration);
 
             services.AddOcelot();
         }

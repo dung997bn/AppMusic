@@ -1,15 +1,16 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
-using System.IO;
-using System.Net;
-using Ultilities.Constants;
+using Microsoft.Extensions.Logging;
 
-namespace CoreAPI
+namespace BusinessConsumerAPI
 {
     public class Startup
     {
@@ -23,38 +24,24 @@ namespace CoreAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            InitializeIoC.InitIoC(services, Configuration);
-
-            //Authen
-            Ultilities.DI.Injector.InjectAuth(services, Configuration);
-
-            //Json Options
-            Ultilities.DI.Injector.InjectOptions(services, Configuration);
-
-            //Swagger
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Identity API", Version = "v1" });
-            });
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            Ultilities.DI.Configuration.ConfigureGlobalExceptionHandler(app, env, Configuration);
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
 
             app.UseRouting();
+
             app.UseAuthorization();
-            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Identity API V1");
             });
         }
     }

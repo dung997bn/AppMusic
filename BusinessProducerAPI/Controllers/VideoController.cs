@@ -13,10 +13,10 @@ namespace BusinessProducerAPI.Controllers
     [ApiController]
     public class VideoController : ControllerBase
     {
-        private readonly IVideoRepository _videoRepository;
+        private readonly IVideoCloudRepository _videoRepository;
         private readonly ILogger<VideoController> _logger;
 
-        public VideoController(IVideoRepository videoRepository, ILogger<VideoController> logger)
+        public VideoController(IVideoCloudRepository videoRepository, ILogger<VideoController> logger)
         {
             _videoRepository = videoRepository;
             _logger = logger;

@@ -22,12 +22,12 @@ namespace BusinessProducerAPI.Controllers
     [ApiController]
     public class AudioController : ControllerBase
     {
-        private readonly IAudioRepository _audioRepository;
+        private readonly IAudioCloudRepository _audioRepository;
         private readonly ILogger<AudioController> _logger;
         private readonly IMapper _mapper;
         private readonly BusinessProducer _producer;
         private readonly EventBusConstants _constants;
-        public AudioController(IAudioRepository audioRepository, ILogger<AudioController> logger,
+        public AudioController(IAudioCloudRepository audioRepository, ILogger<AudioController> logger,
             IMapper mapper, BusinessProducer producer, IOptions<EventBusConstants> options)
         {
             _audioRepository = audioRepository;
@@ -59,9 +59,9 @@ namespace BusinessProducerAPI.Controllers
             try
             {
                 _logger.LogInformation("Starting publish audio event");
-                var userId = User.GetUserId();
-                if (userId == null)
-                    return BadRequest("Failed to authorize");
+                //var userId = User.GetUserId();
+                //if (userId == null)
+                //    return BadRequest("Failed to authorize");
 
                 //send check out event to event bus
                 var eventMessage = _mapper.Map<AudioEvent>(audio);

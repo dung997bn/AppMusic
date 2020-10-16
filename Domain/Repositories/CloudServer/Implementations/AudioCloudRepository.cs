@@ -9,10 +9,10 @@ using Ultilities.Constants;
 
 namespace Data.Repositories.CloudServer.Implementations
 {
-    public class AudioRepository : IAudioRepository
+    public class AudioCloudRepository : IAudioCloudRepository
     {
         private readonly Cloudinary _cloudinary;
-        public AudioRepository(IOptions<CloudinarySettings> setting)
+        public AudioCloudRepository(IOptions<CloudinarySettings> setting)
         {
             var account = new Account(setting.Value.CloudName, setting.Value.ApiKey, setting.Value.ApiSecret);
             _cloudinary = new Cloudinary(account);

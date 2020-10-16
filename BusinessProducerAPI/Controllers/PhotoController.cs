@@ -13,10 +13,10 @@ namespace BusinessProducerAPI.Controllers
     [ApiController]
     public class PhotoController : ControllerBase
     {
-        private readonly IPhotoRepository _photoRepository;
+        private readonly IPhotoCloudRepository _photoRepository;
         private readonly ILogger<PhotoController> _logger;
 
-        public PhotoController(IPhotoRepository photoRepository, ILogger<PhotoController> logger)
+        public PhotoController(IPhotoCloudRepository photoRepository, ILogger<PhotoController> logger)
         {
             _photoRepository = photoRepository;
             _logger = logger;

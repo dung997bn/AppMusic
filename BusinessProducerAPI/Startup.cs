@@ -32,58 +32,22 @@ namespace BusinessProducerAPI
             services.AddControllers();
 
             //Repository
-            services.AddTransient<IAudioRepository, AudioRepository>();
-            services.AddTransient<IVideoRepository, VideoRepository>();
-            services.AddTransient<IPhotoRepository, PhotoRepository>();
+            services.AddTransient<IAudioCloudRepository, AudioCloudRepository>();
+            services.AddTransient<IVideoCloudRepository, VideoCloudRepository>();
+            services.AddTransient<IPhotoCloudRepository, PhotoCloudRepository>();
 
             //Inject Configuration
             services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
             services.Configure<EventBusConstants>(Configuration.GetSection("EventBusConstants"));
 
             //Inject AuthenSettingConfigs
-            services.Configure<AuthSettingConfigs>(Configuration.GetSection("AuthenSettingConfigs"));
-
-            var authenConfig = Configuration.GetSection("AuthenSettingConfigs");
-            services.AddAuthentication(opt => opt.DefaultAuthenticateScheme = "Authorize Schema")
-                    .AddJwtBearer("Authorize Schema", x =>
-                    {
-                        x.SaveToken = true;
-                        x.RequireHttpsMetadata = false;
-                        x.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuerSigningKey = true,
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authenConfig["Secret"])),
-                            ValidateIssuer = true,
-                            ValidIssuer = authenConfig["Iss"],
-                            ValidateAudience = true,
-                            ValidAudience = authenConfig["Aud"],
-                            ValidateLifetime = true,
-                            RequireExpirationTime = true,
-                            ClockSkew = TimeSpan.Zero
-                        };
-                    });
+            Ultilities.DI.Injector.InjectAuth(services, Configuration);
 
             //AutoMapper
             services.AddAutoMapper(typeof(Startup));
 
-            //RabbitMQ
-            services.AddSingleton<IEventBusConnection>(sp =>
-            {
-                var factory = new ConnectionFactory()
-                {
-                    HostName = Configuration["EventBus:HostName"]
-                };
-
-                if (!string.IsNullOrEmpty(Configuration["EventBus:UserName"]))
-                {
-                    factory.UserName = Configuration["EventBus:UserName"];
-                }
-                if (!string.IsNullOrEmpty(Configuration["EventBus:Password"]))
-                {
-                    factory.Password = Configuration["EventBus:Password"];
-                }
-                return new EventBusConnection(factory);
-            });
+            //Event Bus
+            Ultilities.DI.Injector.InjectEventBus(services, Configuration);
 
             services.AddSingleton<BusinessProducer>();
 
@@ -92,7 +56,6 @@ namespace BusinessProducerAPI
             {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Busniess Producer API", Version = "v1" });
             });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -103,8 +66,6 @@ namespace BusinessProducerAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseHttpsRedirection();
-
             app.UseRouting();
 
             app.UseAuthorization();
@@ -113,7 +74,6 @@ namespace BusinessProducerAPI
             {
                 endpoints.MapControllers();
             });
-
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Data.Repositories.CloudServer.Interfaces
 {
-    public interface IAudioRepository
+    public interface IAudioCloudRepository
     {
        Task< FileUploadResult> AddAudio(IFormFile file);
         Task<string> DeleteAudio(string publicId);
