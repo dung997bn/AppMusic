@@ -17,7 +17,7 @@ namespace EventBus.Producers
             _connection = connection;
         }
 
-        public void PublishVideoEvent(string exchange, string routing, VideoEvent video)
+        public Task PublishVideoEvent(string exchange, string routing, VideoEvent video)
         {
             using (var channel = _connection.CreateModel())
             {
@@ -39,6 +39,7 @@ namespace EventBus.Producers
                     //implement ack handle
                 };
                 channel.ConfirmSelect();
+                return Task.CompletedTask;
             }
         }
 

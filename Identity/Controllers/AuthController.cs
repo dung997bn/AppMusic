@@ -63,8 +63,8 @@ namespace CoreAPI.Controllers
                 var claims = new[]
                 {
                     new Claim("Email", user.Email),
-                    new Claim(SystemConstants.UserClaim.Id, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(options.ClaimsIdentity.UserIdClaimType, user.Id.ToString()),
+                    new Claim(options.ClaimsIdentity.UserNameClaimType, user.UserName),
                     new Claim(SystemConstants.UserClaim.FullName, user.FullName??string.Empty),
                     new Claim(options.ClaimsIdentity.RoleClaimType, string.Join(";", roles)),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())

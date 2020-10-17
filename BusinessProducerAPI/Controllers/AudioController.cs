@@ -18,7 +18,7 @@ using Microsoft.Extensions.Options;
 namespace BusinessProducerAPI.Controllers
 {
     [Route("api/app-music/v1/[controller]")]
-    //[Authorize(AuthenticationSchemes = "Authorize Schema")]
+    [Authorize(AuthenticationSchemes = "Authorize Schema")]
     [ApiController]
     public class AudioController : ControllerBase
     {
@@ -59,13 +59,17 @@ namespace BusinessProducerAPI.Controllers
             try
             {
                 _logger.LogInformation("Starting publish audio event");
-                //var userId = User.GetUserId();
-                //if (userId == null)
-                //    return BadRequest("Failed to authorize");
+                var userId = User.GetUserId();
+                if (userId == null)
+                    return BadRequest("Failed to authorize");
 
                 //send check out event to event bus
                 var eventMessage = _mapper.Map<AudioEvent>(audio);
                 eventMessage.RequestId = Guid.NewGuid();
+                eventMessage.UserId = userId;
+                eventMessage.CreateAt = DateTime.Now;
+                eventMessage.UpdatedAt = DateTime.Now;
+                eventMessage.DeletedAt = null;
 
                 await _producer.PublishAudioEvent(exchange: _constants.AudioExchange,
                     routing: $"{_constants.AudioRouting}.create", audio: eventMessage);

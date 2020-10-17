@@ -1,10 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Data.DbContexts.IdentityServer.Core;
-using Data.DbContexts.IdentityServer.Factory;
+using AutoMapper;
+using BusinessConsumerAPI.Consumer;
+using BusinessConsumerAPI.Extensions;
+using Data.DbContexts.SqlServer.Core;
+using Data.DbContexts.SqlServer.Factory;
 using Data.Models.IdentityServer;
+using Data.Repositories.BusinessServer.Implementations;
+using Data.Repositories.BusinessServer.Interfaces;
 using Data.Repositories.IdentityServer.Implementations;
 using Data.Repositories.IdentityServer.Interfaces;
 using Data.Store;
@@ -12,11 +13,9 @@ using EventBus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace BusinessConsumerAPI
 {
@@ -50,6 +49,14 @@ namespace BusinessConsumerAPI
                 opt.Password.RequiredUniqueChars = 1;
             });
 
+
+            //Repository
+            services.AddTransient<IAudioServerRepository, AudioServerRepository>();
+            services.AddTransient<IVideoServerRepository, VideoServerRepository>();
+            services.AddTransient<IPhotoServerRepository, PhotoServerRepository>();
+
+
+            //Sql Connection
             services.AddSingleton<IDbConnectionFactory>((c) =>
             {
                 var connectionString = Configuration.GetConnectionString("BusinessConnection");
@@ -57,11 +64,18 @@ namespace BusinessConsumerAPI
             });
             services.Configure<EventBusConstants>(Configuration.GetSection("EventBusConstants"));
 
+            //AutoMapper
+            services.AddAutoMapper(typeof(Startup));
+
             //Authen
             Ultilities.DI.Injector.InjectAuth(services, Configuration);
 
             //Json Options
             Ultilities.DI.Injector.InjectOptions(services, Configuration);
+
+            //Event Bus
+            Ultilities.DI.Injector.InjectEventBus(services, Configuration);
+            services.AddSingleton<BusinessConsumer>();
 
             //Swagger
             services.AddSwaggerGen(c =>
@@ -77,8 +91,9 @@ namespace BusinessConsumerAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            }          
+            }
 
+            app.UseEventBusListener();
             app.UseRouting();
 
             app.UseAuthorization();

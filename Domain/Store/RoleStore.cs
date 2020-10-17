@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using Data.DbContexts.IdentityServer.Core;
+using Data.DbContexts.SqlServer.Core;
 using Data.Models.IdentityServer;
 using Microsoft.AspNetCore.Identity;
 using System;

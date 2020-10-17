@@ -53,5 +53,28 @@ namespace BusinessConsumerAPI.Consumer
             };
             channel.BasicConsume(queue, true, consumer);
         }
+
+        public void ConsumeVideo(string exchange, string routing, string queue)
+        {
+            var channel = _connection.CreateModel();
+            channel.ExchangeDeclare(exchange: exchange, type: ExchangeType.Topic);
+            channel.QueueDeclare(queue: queue, durable: true, exclusive: false, autoDelete: false, arguments: null);
+            channel.QueueBind(queue: queue, exchange: exchange, routingKey: $"{routing}.*");
+            var consumer = new EventingBasicConsumer(channel);
+            consumer.Received += async (sender, e) =>
+            {
+                var message = Encoding.UTF8.GetString(e.Body.Span);
+                var videoEvent = JsonConvert.DeserializeObject<VideoEvent>(message);
+
+                var video = _mapper.Map<Video>(videoEvent);
+                var result = await _videoRepository.CreateVideo(video);
+            };
+            channel.BasicConsume(queue, true, consumer);
+        }
+
+        public void Disconnect()
+        {
+            _connection.Dispose();
+        }
     }
 }

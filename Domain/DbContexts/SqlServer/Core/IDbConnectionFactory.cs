@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace Data.DbContexts.IdentityServer.Core
+namespace Data.DbContexts.SqlServer.Core
 {
     public interface IDbConnectionFactory
 	{

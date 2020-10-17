@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Linq;
 using System.Security.Claims;
 
@@ -15,7 +16,8 @@ namespace Data.Extensions
 
         public static Guid GetUserId(this ClaimsPrincipal claimsPrincipal)
         {
-            var claim = ((ClaimsIdentity)claimsPrincipal.Identity).Claims.Single(x => x.Type == ClaimTypes.NameIdentifier);
+            IdentityOptions options = new IdentityOptions();
+            var claim = ((ClaimsIdentity)claimsPrincipal.Identity).Claims.Single(x => x.Type == options.ClaimsIdentity.UserIdClaimType);
             return Guid.Parse(claim.Value);
         }
     }

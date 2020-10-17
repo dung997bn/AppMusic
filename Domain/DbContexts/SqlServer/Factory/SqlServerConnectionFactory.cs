@@ -1,8 +1,8 @@
-﻿using Data.DbContexts.IdentityServer.Core;
+﻿using Data.DbContexts.SqlServer.Core;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace Data.DbContexts.IdentityServer.Factory
+namespace Data.DbContexts.SqlServer.Factory
 {
     public class SqlServerConnectionFactory : IDbConnectionFactory
     {
@@ -12,7 +12,6 @@ namespace Data.DbContexts.IdentityServer.Factory
 		{
 			_connectionString = connectionString;
 		}
-
 
 		public IDbConnection CreateConnection()
 		{

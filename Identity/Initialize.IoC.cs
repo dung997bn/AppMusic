@@ -1,5 +1,5 @@
-﻿using Data.DbContexts.IdentityServer.Core;
-using Data.DbContexts.IdentityServer.Factory;
+﻿using Data.DbContexts.SqlServer.Core;
+using Data.DbContexts.SqlServer.Factory;
 using Data.Models.IdentityServer;
 using Data.Repositories.IdentityServer.Implementations;
 using Data.Repositories.IdentityServer.Interfaces;
@@ -7,9 +7,6 @@ using Data.Store;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Text;
 
 namespace CoreAPI
 {

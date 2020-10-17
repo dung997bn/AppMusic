@@ -28,10 +28,29 @@ namespace BusinessConsumerAPI.Extensions
             return app;
         }
 
+        private static EventBusConstants GetConstants()
+        {
+            var builder = new ConfigurationBuilder()
+                            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false);
+
+            IConfigurationRoot configuration = builder.Build();
+            var setting = new EventBusConstants();
+            setting.AudioExchange = configuration.GetSection("EventBusConstants:AudioExchange").Value;
+            setting.AudioQueue = configuration.GetSection("EventBusConstants:AudioQueue").Value;
+            setting.AudioRouting = configuration.GetSection("EventBusConstants:AudioRouting").Value;
+
+            setting.VideoExchange = configuration.GetSection("EventBusConstants:VideoExchange").Value;
+            setting.VideoQueue = configuration.GetSection("EventBusConstants:VideoQueue").Value;
+            setting.VideoRouting = configuration.GetSection("EventBusConstants:VideoRouting").Value;
+            return setting;
+        }
+
         private static void OnStarted()
         {
 
-            Listener.ConsumeAudio();
+            var settings = GetConstants();
+            Listener.ConsumeAudio(settings.AudioExchange, settings.AudioRouting, settings.AudioQueue);
+            Listener.ConsumeVideo(settings.VideoExchange, settings.VideoRouting, settings.VideoQueue);
         }
 
         private static void OnStopping()
