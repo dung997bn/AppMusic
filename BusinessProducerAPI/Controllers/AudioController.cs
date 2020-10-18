@@ -45,7 +45,7 @@ namespace BusinessProducerAPI.Controllers
             return Ok(result);
         }
 
-        [HttpDelete]
+        [HttpDelete("{Id}")]
         public async Task<IActionResult> DeleteAudio(string Id)
         {
             _logger.LogInformation("Deleting file");

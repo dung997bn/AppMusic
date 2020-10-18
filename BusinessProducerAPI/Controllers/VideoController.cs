@@ -38,7 +38,7 @@ namespace BusinessProducerAPI.Controllers
             _constants = options.Value;
         }
 
-        [HttpPost]
+        [HttpPost("upload")]
         public async Task<IActionResult> UploadImage(IFormFile file)
         {
             _logger.LogInformation("Uploading video");
@@ -46,7 +46,7 @@ namespace BusinessProducerAPI.Controllers
             return Ok(result);
         }
 
-        [HttpDelete]
+        [HttpDelete("Id")]
         public async Task<IActionResult> DeleteAudio(string Id)
         {
             _logger.LogInformation("Deleting file");

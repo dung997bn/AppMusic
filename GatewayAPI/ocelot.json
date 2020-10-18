@@ -1,34 +1,6 @@
 {
   "ReRoutes": [
     {
-      "DownstreamPathTemplate": "/api/app-music/v1/audio",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": "8082"
-        }
-      ],
-      "UpstreamPathTemplate": "/audio",
-      "UpstreamHttpMethod": [ "Get" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Authorize Schema",
-        "AllowedScopes": []
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/app-music/v1/photo",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": "8082"
-        }
-      ],
-      "UpstreamPathTemplate": "/photo",
-      "UpstreamHttpMethod": [ "Get" ]
-    },
-    {
       "DownstreamPathTemplate": "/api/app-music/v1/auth/login",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -51,6 +23,104 @@
       ],
       "UpstreamPathTemplate": "/auth/register",
       "UpstreamHttpMethod": [ "Post" ]
+    },
+    //Audio
+    {
+      "DownstreamPathTemplate": "/api/app-music/v1/audio/upload",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "8082"
+        }
+      ],
+      "UpstreamPathTemplate": "/audio/upload",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Authorize Schema",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/app-music/v1/audio/complete-upload",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "8082"
+        }
+      ],
+      "UpstreamPathTemplate": "/audio/complete-upload",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Authorize Schema",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/app-music/v1/audio/{Id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "8082"
+        }
+      ],
+      "UpstreamPathTemplate": "/audio",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Authorize Schema",
+        "AllowedScopes": []
+      }
+    },
+    //Video
+    {
+      "DownstreamPathTemplate": "/api/app-music/v1/video/upload",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "8082"
+        }
+      ],
+      "UpstreamPathTemplate": "/video/upload",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Authorize Schema",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/app-music/v1/video/complete-upload",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "8082"
+        }
+      ],
+      "UpstreamPathTemplate": "/video/complete-upload",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Authorize Schema",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/app-music/v1/video/{Id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "8082"
+        }
+      ],
+      "UpstreamPathTemplate": "/video/{Id}",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Authorize Schema",
+        "AllowedScopes": []
+      }
     }
   ]
   //,
