@@ -1,0 +1,28 @@
+<template>
+  <div class="pre-loader">
+    <div class="pre-loader-box">
+      <div class="loader-logo">
+        <img src="vendors/images/deskapp-logo.svg" alt="" />
+      </div>
+      <div class="loader-progress" id="progress_div">
+        <div class="bar" id="bar1"></div>
+      </div>
+      <div class="percent" id="percent1">0%</div>
+      <div class="loading-text">Loading...</div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+
+export default defineComponent({
+  name: "PreLoader",
+  data() {
+    return null;
+  },
+});
+</script>
+
+<style scoped>
+</style>
