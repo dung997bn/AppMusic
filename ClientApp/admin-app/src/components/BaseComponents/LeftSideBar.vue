@@ -4,7 +4,7 @@
       <a href="/">
         <img src="vendors/images/favicon-32x32.png" alt="" class="dark-logo" />
         <img src="vendors/images/favicon-32x32.png" alt="" class="light-logo" />
-        <span class="ml-1" style="color:blue;"> App Music</span>
+        <span class="ml-1" style="color: blue"> App Music</span>
       </a>
       <div class="close-sidebar" data-toggle="left-sidebar-close">
         <i class="ion-close-round"></i>

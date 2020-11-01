@@ -59,7 +59,8 @@
           "avoidEscape": true
         }
       ],
-      "semi": 0
+      "semi": 0,
+      "no-unused-vars": "off"
     }
   },
   "browserslist": [
