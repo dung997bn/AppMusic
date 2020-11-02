@@ -67,7 +67,8 @@ namespace CoreAPI.Controllers
                     new Claim(options.ClaimsIdentity.UserNameClaimType, user.UserName),
                     new Claim(SystemConstants.UserClaim.FullName, user.FullName??string.Empty),
                     new Claim(options.ClaimsIdentity.RoleClaimType, string.Join(";", roles)),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Exp, DateTime.Now.AddMinutes(2).Millisecond.ToString())
                 };
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authSettings.Secret));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
